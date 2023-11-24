@@ -1,7 +1,9 @@
+typedef unsigned int piece;
+
 /* Game board structure */
 typedef struct {
   size_t size;
-  unsigned int *board;
+  piece *board;
 } Board;
 
 /* Game states */
@@ -19,7 +21,7 @@ typedef enum {
 } Direction;
 
 /* Game functions */
-Board *empty_board(size_t size);
+Board *empty_board(ssize_t size);
 void free_board(Board *board);
 int move(Board *board, Direction direction);
 void show_board(Board *board);
