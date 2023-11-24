@@ -6,21 +6,20 @@ typedef struct {
 
 /* Game states */
 typedef enum {
-  WIN = 1,
-  LOSE = 2,
-  CONTINUE = 3
+  GAME_NOT_OVER,
+  GAME_OVER
 } GameState;
 
 /* Move directions */
 typedef enum {
-  UP = 1,
-  DOWN = 2,
-  LEFT = 3,
-  RIGHT = 4
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT
 } Direction;
 
 /* Game functions */
-Board *create_board(size_t size);
+Board *empty_board(size_t size);
 void free_board(Board *board);
 int move(Board *board, Direction direction);
 void show_board(Board *board);
