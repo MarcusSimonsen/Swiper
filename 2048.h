@@ -21,7 +21,7 @@ typedef enum {
 } Direction;
 
 /* Game functions */
-Board *empty_board(ssize_t size);
+Board *create_board(ssize_t size);
 void free_board(Board *board);
 int move(Board *board, Direction direction);
 void show_board(Board *board);
