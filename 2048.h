@@ -1,7 +1,7 @@
 /* Game board structure */
 typedef struct {
   size_t size;
-  unsigned int **board;
+  unsigned int *board;
 } Board;
 
 /* Game states */
