@@ -3,4 +3,4 @@
 #include "2048.h"
 #endif
 
-Direction make_move(Board *board);
+Direction get_move(Board *board);
