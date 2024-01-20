@@ -1,7 +1,7 @@
 CC = gcc
 
 manual:
-	$(CC) -o 2048 play_manual.c
+	$(CC) -o game 2048/play_manual.c
 
 clean:
-	rm 2048
+	rm game
