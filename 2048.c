@@ -70,12 +70,19 @@ void free_board(Board *board) {
  * Helper function for moving tiles up
  */
 void move_up(Board *board) {
+	int i, j, k;
+	ssize_t s;
+	piece *arr;
+
+	s = board->size;
+	arr = board->board;
+
 	/* Go through each column */
 	for (i = 0; i < s; i++) {
 		k = i;
 		/* Go trough each row */
 		for (j = 1; j < s; j++) {
-			/* Is current piece not empty? */
+			/* Is current piece empty? */
 			if (arr[i+j*s] == 0)
 				continue;
 			/* Can pieces be merged? */
@@ -99,25 +106,55 @@ void move_up(Board *board) {
 }
 
 /**
- * Moves tiles in the given direction
+ * Helper function for moving tiles down
  */
-int move(Board *board, Direction direction) {
+void move_down(Board *board) {
 	int i, j, k;
-	int i_min, i_max,
-		j_min, j_max;
-	int i_change, j_change;
 	ssize_t s;
 	piece *arr;
 
 	s = board->size;
 	arr = board->board;
 
+	/* Go through each column */
+	for (i = 0; i < s; i++) {
+		k = i;
+		/* Go trough each row */
+		for (j = s-2; j >= 0; j--) {
+			/* Is current piece empty? */
+			if (arr[i+j*s] == 0)
+				continue;
+			/* Can pieces be merged? */
+			if (arr[i+j*s] == arr[k]) {	/* Merge pieces */
+				arr[k]++;				/* Upgrade piece */
+				arr[i+j*s] = 0;			/* Remove other piece */
+				k -= s;
+			} else { /* Pieces couldn't be merged,
+						so just move piece */
+				if (arr[k] == 0)
+					arr[k] = arr[i+j*s];
+				else {
+					arr[k-s] = arr[i+j*s];
+					k -= s;
+				}
+				if (k != i+j*s)
+					arr[i+j*s] = 0;
+			}
+		}
+	}
+}
+
+/**
+ * Moves tiles in the given direction
+ */
+int move(Board *board, Direction direction) {
 	/* Perform actual move of pieces */
 	switch(direction) {
 		case UP:
 			move_up(board);
 			break;
 		case DOWN:
+			move_down(board);
 			break;
 		case LEFT:
 			break;
