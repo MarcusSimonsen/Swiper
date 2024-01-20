@@ -118,7 +118,7 @@ void move_down(Board *board) {
 
 	/* Go through each column */
 	for (i = 0; i < s; i++) {
-		k = i;
+		k = i + (s-1)*s;
 		/* Go trough each row */
 		for (j = s-2; j >= 0; j--) {
 			/* Is current piece empty? */
