@@ -184,6 +184,45 @@ void move_left(Board *board) {
 }
 
 /**
+ * Helper function for moving tiles right
+ */
+void move_right(Board *board) {
+	int i, j, k;
+	ssize_t s;
+	piece *arr;
+
+	s = board->size;
+	arr = board->board;
+
+	/* Go through each row */
+	for (j = 0; j < s; j++) {
+		k = j*s + s-1;
+		/* Go trough each column */
+		for (i = s-2; i >= 0; i--) {
+			/* Is current piece empty? */
+			if (arr[i+j*s] == 0)
+				continue;
+			/* Can pieces be merged? */
+			if (arr[i+j*s] == arr[k]) {	/* Merge pieces */
+				arr[k]++;				/* Upgrade piece */
+				arr[i+j*s] = 0;			/* Remove other piece */
+				k--;
+			} else { /* Pieces couldn't be merged,
+						so just move piece */
+				if (arr[k] == 0)
+					arr[k] = arr[i+j*s];
+				else {
+					arr[k-1] = arr[i+j*s];
+					k--;
+				}
+				if (k != i+j*s)
+					arr[i+j*s] = 0;
+			}
+		}
+	}
+}
+
+/**
  * Moves tiles in the given direction
  */
 int move(Board *board, Direction direction) {
@@ -199,6 +238,7 @@ int move(Board *board, Direction direction) {
 			move_left(board);
 			break;
 		case RIGHT:
+			move_right(board);
 			break;
 	}
 
