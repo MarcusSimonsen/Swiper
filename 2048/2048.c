@@ -69,13 +69,15 @@ void free_board(Board *board) {
 /**
  * Helper function for moving tiles up
  */
-void move_up(Board *board) {
+unsigned int move_up(Board *board) {
 	int i, j, k;
 	ssize_t s;
+	unsigned int moved;
 	piece *arr;
 
 	s = board->size;
 	arr = board->board;
+	moved = 0;
 
 	/* Go through each column */
 	for (i = 0; i < s; i++) {
@@ -98,23 +100,28 @@ void move_up(Board *board) {
 					arr[k+s] = arr[i+j*s];
 					k += s;
 				}
-				if (k != i+j*s)
-					arr[i+j*s] = 0;
+				if (k == i+j*s)
+					continue;
+				arr[i+j*s] = 0;
 			}
+			moved++;
 		}
 	}
+	return moved;
 }
 
 /**
  * Helper function for moving tiles down
  */
-void move_down(Board *board) {
+unsigned int move_down(Board *board) {
 	int i, j, k;
 	ssize_t s;
+	unsigned int moved;
 	piece *arr;
 
 	s = board->size;
 	arr = board->board;
+	moved = 0;
 
 	/* Go through each column */
 	for (i = 0; i < s; i++) {
@@ -137,23 +144,28 @@ void move_down(Board *board) {
 					arr[k-s] = arr[i+j*s];
 					k -= s;
 				}
-				if (k != i+j*s)
-					arr[i+j*s] = 0;
+				if (k == i+j*s)
+					continue;
+				arr[i+j*s] = 0;
 			}
+			moved++;
 		}
 	}
+	return moved;
 }
 
 /**
  * Helper function for moving tiles left
  */
-void move_left(Board *board) {
+unsigned int move_left(Board *board) {
 	int i, j, k;
 	ssize_t s;
+	unsigned int moved;
 	piece *arr;
 
 	s = board->size;
 	arr = board->board;
+	moved = 0;
 
 	/* Go through each row */
 	for (j = 0; j < s; j++) {
@@ -176,23 +188,28 @@ void move_left(Board *board) {
 					arr[k+1] = arr[i+j*s];
 					k++;
 				}
-				if (k != i+j*s)
-					arr[i+j*s] = 0;
+				if (k == i+j*s)
+					continue;
+				arr[i+j*s] = 0;
 			}
+			moved++;
 		}
 	}
+	return moved;
 }
 
 /**
  * Helper function for moving tiles right
  */
-void move_right(Board *board) {
+unsigned int move_right(Board *board) {
 	int i, j, k;
 	ssize_t s;
+	unsigned int moved;
 	piece *arr;
 
 	s = board->size;
 	arr = board->board;
+	moved = 0;
 
 	/* Go through each row */
 	for (j = 0; j < s; j++) {
@@ -215,33 +232,44 @@ void move_right(Board *board) {
 					arr[k-1] = arr[i+j*s];
 					k--;
 				}
-				if (k != i+j*s)
-					arr[i+j*s] = 0;
+				if (k == i+j*s)
+					continue;
+				arr[i+j*s] = 0;
 			}
+			moved++;
 		}
 	}
+	return moved;
 }
 
 /**
  * Moves tiles in the given direction
  */
-int move(Board *board, Direction direction) {
+MoveResult move(Board *board, Direction direction) {
+	unsigned int res;
 	/* Perform actual move of pieces */
 	switch(direction) {
 		case UP:
-			move_up(board);
+			res = move_up(board);
 			break;
 		case DOWN:
-			move_down(board);
+			res = move_down(board);
 			break;
 		case LEFT:
-			move_left(board);
+			res = move_left(board);
 			break;
 		case RIGHT:
-			move_right(board);
+			res = move_right(board);
 			break;
 	}
 
-	/* Spawn new pieces */
-	spawn_tile(board);
+	printf("Moved %d pieces\n", res);
+
+	if (res > 0) {
+		/* Spawn new pieces */
+		spawn_tile(board);
+
+		return MOVE_OK;
+	}
+	return MOVE_INVALID;
 }

@@ -20,9 +20,15 @@ typedef enum {
   RIGHT
 } Direction;
 
+/* Move results */
+typedef enum {
+  MOVE_OK,
+  MOVE_INVALID
+} MoveResult;
+
 /* Game functions */
 Board *create_board(ssize_t size);
 void free_board(Board *board);
-int move(Board *board, Direction direction);
+MoveResult move(Board *board, Direction direction);
 void show_board(Board *board);
 GameState game_state(Board *board);

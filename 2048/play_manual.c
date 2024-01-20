@@ -37,16 +37,23 @@ void main() {
 
 	Board *board;
 	Direction move_dir;
+	MoveResult res;
 
 	board = create_board(4);
 
-	while (/*game_state(board) == GAME_NOT_OVER*/ 1) {
+	while (/*game_state(board) == GAME_NOT_OVER && */ 1) {
 		/* Print board to user */
 		print_board(board);
 		/* Get input from user */
-		move_dir = get_move(board);
-		/* Make move */
-		move(board, move_dir);
+		res = MOVE_INVALID;
+		while (res != MOVE_OK) {
+			move_dir = get_move(board);
+			/* Make move */
+			res = move(board, move_dir);
+			/* Check if move was invalid */
+			if (res == MOVE_INVALID)
+				printf("Invalid move\n");
+		}
 	}
 
 	free_board(board);
