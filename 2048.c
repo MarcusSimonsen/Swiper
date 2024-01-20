@@ -66,6 +66,41 @@ void free_board(Board *board) {
 	free(board);
 }
 
+/**
+ * Helper function for moving tiles up
+ */
+void move_up(Board *board) {
+	/* Go through each column */
+	for (i = 0; i < s; i++) {
+		k = i;
+		/* Go trough each row */
+		for (j = 1; j < s; j++) {
+			/* Is current piece not empty? */
+			if (arr[i+j*s] == 0)
+				continue;
+			/* Can pieces be merged? */
+			if (arr[i+j*s] == arr[k]) {	/* Merge pieces */
+				arr[k]++;				/* Upgrade piece */
+				arr[i+j*s] = 0;			/* Remove other piece */
+				k += s;
+			} else { /* Pieces couldn't be merged,
+						so just move piece */
+				if (arr[k] == 0)
+					arr[k] = arr[i+j*s];
+				else {
+					arr[k+s] = arr[i+j*s];
+					k += s;
+				}
+				if (k != i+j*s)
+					arr[i+j*s] = 0;
+			}
+		}
+	}
+}
+
+/**
+ * Moves tiles in the given direction
+ */
 int move(Board *board, Direction direction) {
 	int i, j, k;
 	int i_min, i_max,
@@ -80,32 +115,7 @@ int move(Board *board, Direction direction) {
 	/* Perform actual move of pieces */
 	switch(direction) {
 		case UP:
-			/* Go through each column */
-			for (i = 0; i < s; i++) {
-				k = i;
-				/* Go trough each row */
-				for (j = 1; j < s; j++) {
-					/* Is current piece not empty? */
-					if (arr[i+j*s] != 0) {
-						/* Can pieces be merged? */
-						if (arr[i+j*s] == arr[k]) {	/* Merge pieces */
-							arr[k]++;				/* Upgrade piece */
-							arr[i+j*s] = 0;			/* Remove other piece */
-							printf("Merge pieces at locations %u and %u\n", k, i+j*s);
-							k += s;
-						} else { /* Pieces couldn't be merged,
-									so just move piece */
-							if (arr[k] == 0)
-								arr[k] = arr[i+j*s];
-							else {
-								arr[k+s] = arr[i+j*s];
-								k += s;
-							}
-							arr[i+j*s] = 0;
-						}
-					}
-				}
-			}
+			move_up(board);
 			break;
 		case DOWN:
 			break;
